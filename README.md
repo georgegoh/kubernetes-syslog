@@ -4,7 +4,7 @@ Docker container for pushing container logs in kubernetes to an external syslog 
 ## Building
 
 ~~~~
-docker build . -t kubernetes-syslog:<version>
+docker build -t kubernetes-syslog:<version> .
 ~~~~
 
 ## Preparing the image for the cluster
