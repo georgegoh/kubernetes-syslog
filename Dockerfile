@@ -1,19 +1,18 @@
-FROM fluent/fluentd:latest
+FROM fluent/fluentd:v0.12
 MAINTAINER George Goh <george.goh@redhat.com>
 WORKDIR /home/fluent
-ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
 
-USER root
-RUN apk --no-cache --update add sudo build-base ruby-dev && \
+RUN apk add --no-cache --update --virtual .build-deps sudo build-base ruby-dev && \
 
-    sudo -u fluent gem install --no-document fluent-plugin-record-reformer && \
-    sudo -u fluent gem install --no-document fluent-plugin-docker_metadata_filter && \
-    sudo -u fluent gem install --no-document fluent-plugin-kubernetes_metadata_filter && \
-    sudo -u fluent gem install --no-document fluent-plugin-flatten-hash && \
-    sudo -u fluent gem install --no-document fluent-plugin-kubernetes_remote_syslog && \
-
-    rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && sudo -u fluent gem sources -c && \
-    apk del sudo build-base ruby-dev && rm -rf /var/cache/apk/*
+    sudo fluent-gem install --no-document fluent-plugin-record-reformer && \
+    sudo fluent-gem install --no-document fluent-plugin-docker_metadata_filter && \
+    sudo fluent-gem install --no-document fluent-plugin-kubernetes_metadata_filter && \
+    sudo fluent-gem install --no-document fluent-plugin-flatten-hash && \
+    sudo fluent-gem install --no-document fluent-plugin-kubernetes_remote_syslog && \
+    sudo fluent-gem sources --clear-all && \
+    apk del .build-deps sudo build-base ruby-dev && \
+    rm -rf /var/cache/apk/* \
+           /home/fluent/.gem/ruby/2.3.0/cache/*.gem
 
 EXPOSE 24284
 
