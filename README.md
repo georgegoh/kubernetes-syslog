@@ -101,7 +101,7 @@ cat > fluent.conf << EOF
   </filter>
 
   <match **>
-     @type remote_syslog
+     @type kubernetes_remote_syslog
      #remote_syslog "#{ENV['SYSLOG_HOST']}"
      host "#{ENV['SYSLOG_HOST']}"
      port "#{ENV['SYSLOG_PORT']}"
