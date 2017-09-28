@@ -16,4 +16,9 @@ RUN apk add --no-cache --update --virtual .build-deps sudo build-base ruby-dev &
 
 EXPOSE 24284
 
-CMD exec fluentd -c /fluentd/etc/$FLUENTD_CONF -p /fluentd/plugins $FLUENTD_OPT
+RUN echo '#!/usr/bin/dumb-init /bin/sh' > /tmp/entrypoint.sh && \
+    echo 'exec su-exec root "$@"' >> /tmp/entrypoint.sh && \
+    mv -f /tmp/entrypoint.sh /bin/entrypoint.sh && \
+    chmod +x /bin/entrypoint.sh
+
+CMD exec fluentd -c /fluentd/etc/$FLUENTD_CONF -p /fluentd/plugins $FLUENTD_OPT > /var/log/fluentd.log 2>&1
