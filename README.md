@@ -94,7 +94,7 @@ cat > fluent.conf << EOF
     enable_ruby
     <record>
       hostname ${(kubernetes_host rescue nil) || File.open('/etc/docker-hostname') { |f| f.readline }.rstrip}
-      message ${(message rescue nil) || log}
+      message ${(message rescue nil) || record["log"]}
       version 1.2.0
     </record>
     remove_keys log,stream
@@ -186,6 +186,7 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+EOF
 ~~~~
 
 Deploy the DaemonSet:
